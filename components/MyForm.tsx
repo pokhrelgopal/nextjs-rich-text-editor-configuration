@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Tiptap from "./Tiptap";
+import { ArrowRight } from "lucide-react";
 
 const MyForm = () => {
   const formSchema = z.object({
@@ -38,7 +39,7 @@ const MyForm = () => {
     }
   }
   return (
-    <div className="my-10">
+    <div className="my-10 w-[500px]">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
@@ -54,7 +55,8 @@ const MyForm = () => {
             )}
           />
           <Button type="submit" className="mt-4">
-            Submit
+            <span>View Output</span>
+            <ArrowRight className="ml-2 h5 w-5" />
           </Button>
         </form>
       </Form>
