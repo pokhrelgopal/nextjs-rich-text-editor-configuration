@@ -39,7 +39,7 @@ const MyForm = () => {
     }
   }
   return (
-    <div className="my-10 w-[500px]">
+    <div className="my-10 w-[1500px]">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField

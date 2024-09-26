@@ -11,6 +11,9 @@ import {
   Heading1,
   Heading2,
   Heading3,
+  Heading4,
+  Heading5,
+  Heading6,
   Image,
   Table,
   RowsIcon,
@@ -18,6 +21,16 @@ import {
   Trash2,
   Plus,
   Minus,
+  Code,
+  Highlighter,
+  Link,
+  Subscript,
+  Superscript,
+  Underline,
+  Quote,
+  Minus as HorizontalRule,
+  Youtube,
+  CheckSquare,
 } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
 import { Button } from "@/components/ui/button";
@@ -40,6 +53,20 @@ export default function Toolbar({ editor }: Props) {
     const url = window.prompt("Enter the URL of the image:");
     if (url) {
       editor.chain().focus().setImage({ src: url }).run();
+    }
+  };
+
+  const addYoutubeVideo = () => {
+    const url = window.prompt("Enter the YouTube video URL:");
+    if (url) {
+      editor.commands.setYoutubeVideo({ src: url });
+    }
+  };
+
+  const addLink = () => {
+    const url = window.prompt("Enter the URL:");
+    if (url) {
+      editor.chain().focus().setLink({ href: url }).run();
     }
   };
 
@@ -81,6 +108,34 @@ export default function Toolbar({ editor }: Props) {
         >
           <Heading3 className="h-4 w-4" />
         </Toggle>
+        {/* h4 h5 h6 */}
+        <Toggle
+          size="sm"
+          pressed={editor.isActive("heading", { level: 4 })}
+          onPressedChange={() =>
+            editor.chain().focus().toggleHeading({ level: 4 }).run()
+          }
+        >
+          <Heading4 className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive("heading", { level: 5 })}
+          onPressedChange={() =>
+            editor.chain().focus().toggleHeading({ level: 5 }).run()
+          }
+        >
+          <Heading5 className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive("heading", { level: 6 })}
+          onPressedChange={() =>
+            editor.chain().focus().toggleHeading({ level: 6 }).run()
+          }
+        >
+          <Heading6 className="h-4 w-4" />
+        </Toggle>
         <Toggle
           size="sm"
           pressed={editor.isActive("bold")}
@@ -104,6 +159,46 @@ export default function Toolbar({ editor }: Props) {
         </Toggle>
         <Toggle
           size="sm"
+          pressed={editor.isActive("underline")}
+          onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
+        >
+          <Underline className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive("code")}
+          onPressedChange={() => editor.chain().focus().toggleCode().run()}
+        >
+          <Code className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive("highlight")}
+          onPressedChange={() => editor.chain().focus().toggleHighlight().run()}
+        >
+          <Highlighter className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive("subscript")}
+          onPressedChange={() => editor.chain().focus().toggleSubscript().run()}
+        >
+          <Subscript className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive("superscript")}
+          onPressedChange={() =>
+            editor.chain().focus().toggleSuperscript().run()
+          }
+        >
+          <Superscript className="h-4 w-4" />
+        </Toggle>
+        <Button size="sm" variant="ghost" onClick={addLink}>
+          <Link className="h-4 w-4" />
+        </Button>
+        <Toggle
+          size="sm"
           pressed={editor.isActive("bulletList")}
           onPressedChange={() =>
             editor.chain().focus().toggleBulletList().run()
@@ -120,8 +215,34 @@ export default function Toolbar({ editor }: Props) {
         >
           <ListOrdered className="h-4 w-4" />
         </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive("taskList")}
+          onPressedChange={() => editor.chain().focus().toggleTaskList().run()}
+        >
+          <CheckSquare className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive("blockquote")}
+          onPressedChange={() =>
+            editor.chain().focus().toggleBlockquote().run()
+          }
+        >
+          <Quote className="h-4 w-4" />
+        </Toggle>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => editor.chain().focus().setHorizontalRule().run()}
+        >
+          <HorizontalRule className="h-4 w-4" />
+        </Button>
         <Button size="sm" variant="ghost" onClick={addImage}>
           <Image className="h-4 w-4" />
+        </Button>
+        <Button size="sm" variant="ghost" onClick={addYoutubeVideo}>
+          <Youtube className="h-4 w-4" />
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
