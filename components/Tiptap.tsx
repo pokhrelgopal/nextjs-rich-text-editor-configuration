@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { useEditor, EditorContent } from "@tiptap/react"
+import { useEditor, EditorContent, Editor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import Underline from "@tiptap/extension-underline"
 import Link from "@tiptap/extension-link"
@@ -17,8 +17,8 @@ import TaskList from "@tiptap/extension-task-list"
 import TaskItem from "@tiptap/extension-task-item"
 import Youtube from "@tiptap/extension-youtube"
 import Highlight from "@tiptap/extension-highlight"
+import TextAlign from "@tiptap/extension-text-align"
 import Toolbar from "./Toolbar"
-import { Heading } from "@tiptap/extension-heading"
 
 type Props = {
   description: string
@@ -28,10 +28,23 @@ type Props = {
 const Tiptap = ({ description, onChange }: Props) => {
   const editor = useEditor({
     extensions: [
-      StarterKit,
-      Heading,
+      StarterKit.configure({
+        heading: {
+          levels: [1, 2, 3, 4, 5, 6],
+        },
+        bulletList: {
+          keepMarks: true,
+          keepAttributes: false,
+        },
+        orderedList: {
+          keepMarks: true,
+          keepAttributes: false,
+        },
+      }),
       Underline,
-      Link,
+      Link.configure({
+        openOnClick: false,
+      }),
       Image.configure({
         HTMLAttributes: {
           class: "max-w-full h-auto my-4",
@@ -68,6 +81,9 @@ const Tiptap = ({ description, onChange }: Props) => {
         },
       }),
       Highlight,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
     ],
     content: description,
     editorProps: {

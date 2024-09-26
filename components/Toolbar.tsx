@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import React from "react";
-import { type Editor } from "@tiptap/react";
+import React from "react"
+import { type Editor } from "@tiptap/react"
 import {
   Bold,
   Strikethrough,
@@ -31,111 +31,107 @@ import {
   Minus as HorizontalRule,
   Youtube,
   CheckSquare,
-} from "lucide-react";
-import { Toggle } from "@/components/ui/toggle";
-import { Button } from "@/components/ui/button";
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+  Pilcrow,
+} from "lucide-react"
+import { Toggle } from "@/components/ui/toggle"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 
 type Props = {
-  editor: Editor | null;
-};
+  editor: Editor | null
+}
 
 export default function Toolbar({ editor }: Props) {
-  if (!editor) return null;
+  if (!editor) return null
 
   const addImage = () => {
-    const url = window.prompt("Enter the URL of the image:");
+    const url = window.prompt("Enter the URL of the image:")
     if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
+      editor.chain().focus().setImage({ src: url }).run()
     }
-  };
+  }
 
   const addYoutubeVideo = () => {
-    const url = window.prompt("Enter the YouTube video URL:");
+    const url = window.prompt("Enter the YouTube video URL:")
     if (url) {
-      editor.commands.setYoutubeVideo({ src: url });
+      editor.commands.setYoutubeVideo({ src: url })
     }
-  };
+  }
 
   const addLink = () => {
-    const url = window.prompt("Enter the URL:");
+    const url = window.prompt("Enter the URL:")
     if (url) {
-      editor.chain().focus().setLink({ href: url }).run();
+      editor.chain().focus().setLink({ href: url }).run()
     }
-  };
+  }
 
   const addTable = () => {
     editor
       .chain()
       .focus()
       .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-      .run();
-  };
+      .run()
+  }
 
   return (
     <div className="border border-input bg-transparent rounded-md mb-2 w-fit">
       <div className="flex flex-wrap gap-1 p-1">
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("heading", { level: 1 })}
-          onPressedChange={() =>
-            editor.chain().focus().toggleHeading({ level: 1 }).run()
-          }
-        >
-          <Heading1 className="h-4 w-4" />
-        </Toggle>
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("heading", { level: 2 })}
-          onPressedChange={() =>
-            editor.chain().focus().toggleHeading({ level: 2 }).run()
-          }
-        >
-          <Heading2 className="h-4 w-4" />
-        </Toggle>
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("heading", { level: 3 })}
-          onPressedChange={() =>
-            editor.chain().focus().toggleHeading({ level: 3 }).run()
-          }
-        >
-          <Heading3 className="h-4 w-4" />
-        </Toggle>
-        {/* h4 h5 h6 */}
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("heading", { level: 4 })}
-          onPressedChange={() =>
-            editor.chain().focus().toggleHeading({ level: 4 }).run()
-          }
-        >
-          <Heading4 className="h-4 w-4" />
-        </Toggle>
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("heading", { level: 5 })}
-          onPressedChange={() =>
-            editor.chain().focus().toggleHeading({ level: 5 }).run()
-          }
-        >
-          <Heading5 className="h-4 w-4" />
-        </Toggle>
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("heading", { level: 6 })}
-          onPressedChange={() =>
-            editor.chain().focus().toggleHeading({ level: 6 }).run()
-          }
-        >
-          <Heading6 className="h-4 w-4" />
-        </Toggle>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="sm" variant="ghost">
+              {editor.isActive("paragraph") ? <Pilcrow className="h-4 w-4" /> : 
+               editor.isActive("heading", { level: 1 }) ? <Heading1 className="h-4 w-4" /> :
+               editor.isActive("heading", { level: 2 }) ? <Heading2 className="h-4 w-4" /> :
+               editor.isActive("heading", { level: 3 }) ? <Heading3 className="h-4 w-4" /> :
+               editor.isActive("heading", { level: 4 }) ? <Heading4 className="h-4 w-4" /> :
+               editor.isActive("heading", { level: 5 }) ? <Heading5 className="h-4 w-4" /> :
+               editor.isActive("heading", { level: 6 }) ? <Heading6 className="h-4 w-4" /> :
+               <Pilcrow className="h-4 w-4" />}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuGroup>
+              <DropdownMenuItem onSelect={() => editor.chain().focus().setParagraph().run()}>
+                <Pilcrow className="mr-2 h-4 w-4" />
+                <span>Paragraph</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
+                <Heading1 className="mr-2 h-4 w-4" />
+                <span>Heading 1</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
+                <Heading2 className="mr-2 h-4 w-4" />
+                <span>Heading 2</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>
+                <Heading3 className="mr-2 h-4 w-4" />
+                <span>Heading 3</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}>
+                <Heading4 className="mr-2 h-4 w-4" />
+                <span>Heading 4</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}>
+                <Heading5 className="mr-2 h-4 w-4" />
+                <span>Heading 5</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}>
+                <Heading6 className="mr-2 h-4 w-4" />
+                <span>Heading 6</span>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <Toggle
           size="sm"
           pressed={editor.isActive("bold")}
@@ -188,9 +184,7 @@ export default function Toolbar({ editor }: Props) {
         <Toggle
           size="sm"
           pressed={editor.isActive("superscript")}
-          onPressedChange={() =>
-            editor.chain().focus().toggleSuperscript().run()
-          }
+          onPressedChange={() => editor.chain().focus().toggleSuperscript().run()}
         >
           <Superscript className="h-4 w-4" />
         </Toggle>
@@ -200,18 +194,14 @@ export default function Toolbar({ editor }: Props) {
         <Toggle
           size="sm"
           pressed={editor.isActive("bulletList")}
-          onPressedChange={() =>
-            editor.chain().focus().toggleBulletList().run()
-          }
+          onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
         >
           <List className="h-4 w-4" />
         </Toggle>
         <Toggle
           size="sm"
           pressed={editor.isActive("orderedList")}
-          onPressedChange={() =>
-            editor.chain().focus().toggleOrderedList().run()
-          }
+          onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
         >
           <ListOrdered className="h-4 w-4" />
         </Toggle>
@@ -225,9 +215,7 @@ export default function Toolbar({ editor }: Props) {
         <Toggle
           size="sm"
           pressed={editor.isActive("blockquote")}
-          onPressedChange={() =>
-            editor.chain().focus().toggleBlockquote().run()
-          }
+          onPressedChange={() => editor.chain().focus().toggleBlockquote().run()}
         >
           <Quote className="h-4 w-4" />
         </Toggle>
@@ -244,6 +232,34 @@ export default function Toolbar({ editor }: Props) {
         <Button size="sm" variant="ghost" onClick={addYoutubeVideo}>
           <Youtube className="h-4 w-4" />
         </Button>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive({ textAlign: 'left' })}
+          onPressedChange={() => editor.chain().focus().setTextAlign('left').run()}
+        >
+          <AlignLeft className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive({ textAlign: 'center' })}
+          onPressedChange={() => editor.chain().focus().setTextAlign('center').run()}
+        >
+          <AlignCenter className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive({ textAlign: 'right' })}
+          onPressedChange={() => editor.chain().focus().setTextAlign('right').run()}
+        >
+          <AlignRight className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive({ textAlign: 'justify' })}
+          onPressedChange={() => editor.chain().focus().setTextAlign('justify').run()}
+        >
+          <AlignJustify className="h-4 w-4" />
+        </Toggle>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -307,5 +323,5 @@ export default function Toolbar({ editor }: Props) {
         </DropdownMenu>
       </div>
     </div>
-  );
+  )
 }
