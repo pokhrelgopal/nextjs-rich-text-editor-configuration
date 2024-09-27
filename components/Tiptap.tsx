@@ -1,13 +1,23 @@
+"use client";
+
 import React from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Heading from "@tiptap/extension-heading";
-import ListItem from "@tiptap/extension-list-item";
+import Underline from "@tiptap/extension-underline";
+import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
+import Subscript from "@tiptap/extension-subscript";
+import Superscript from "@tiptap/extension-superscript";
+import TextStyle from "@tiptap/extension-text-style";
 import Table from "@tiptap/extension-table";
 import TableRow from "@tiptap/extension-table-row";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
+import TaskList from "@tiptap/extension-task-list";
+import TaskItem from "@tiptap/extension-task-item";
+import Youtube from "@tiptap/extension-youtube";
+import Highlight from "@tiptap/extension-highlight";
+import TextAlign from "@tiptap/extension-text-align";
 import Toolbar from "./Toolbar";
 
 type Props = {
@@ -19,27 +29,36 @@ const Tiptap = ({ description, onChange }: Props) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: false, // Disable the heading from StarterKit
-        // The ordered list is included in StarterKit by default
-      }),
-      Heading.configure({
-        levels: [1, 2, 3],
-        HTMLAttributes: {
-          class: "font-bold",
+        heading: {
+          levels: [1, 2, 3, 4, 5, 6],
+        },
+        bulletList: {
+          keepMarks: true,
+          keepAttributes: false,
+        },
+        orderedList: {
+          keepMarks: true,
+          keepAttributes: false,
         },
       }),
-      ListItem.configure({ HTMLAttributes: { class: "list-disc ml-4" } }),
+      Underline,
+      Link.configure({
+        openOnClick: false,
+      }),
       Image.configure({
         HTMLAttributes: {
           class: "max-w-full h-auto my-4",
         },
       }),
+      Subscript,
+      Superscript,
+      TextStyle,
       Table.configure({
         HTMLAttributes: {
           class: "border-collapse table-auto w-full my-4",
         },
       }),
-      TableRow.configure(),
+      TableRow,
       TableCell.configure({
         HTMLAttributes: {
           class: "border border-gray-300 p-2",
@@ -49,6 +68,21 @@ const Tiptap = ({ description, onChange }: Props) => {
         HTMLAttributes: {
           class: "border border-gray-300 p-2 bg-gray-100 font-bold",
         },
+      }),
+      TaskList,
+      TaskItem.configure({
+        HTMLAttributes: {
+          class: "flex items-center",
+        },
+      }),
+      Youtube.configure({
+        HTMLAttributes: {
+          class: "w-full aspect-video my-4",
+        },
+      }),
+      Highlight,
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
       }),
     ],
     content: description,
@@ -69,23 +103,37 @@ const Tiptap = ({ description, onChange }: Props) => {
       <EditorContent className="prose max-w-none" editor={editor} />
       <style jsx global>{`
         .ProseMirror h1 {
-          font-size: 1.8em;
+          font-size: 2.5em;
           margin-top: 0.5em;
           margin-bottom: 0.3em;
         }
         .ProseMirror h2 {
-          font-size: 1.5em;
+          font-size: 2.2em;
           margin-top: 0.4em;
           margin-bottom: 0.2em;
         }
         .ProseMirror h3 {
-          font-size: 1.3em;
+          font-size: 2em;
+          margin-top: 0.3em;
+          margin-bottom: 0.1em;
+        }
+        .ProseMirror h4 {
+          font-size: 1.8em;
+          margin-top: 0.3em;
+          margin-bottom: 0.1em;
+        }
+        .ProseMirror h5 {
+          font-size: 1.5em;
           margin-top: 0.3em;
           margin-bottom: 0.1em;
         }
         .ProseMirror p {
           margin-top: 0.5em;
           margin-bottom: 0.5em;
+        }
+        .ProseMirror a {
+          color: #2563eb;
+          text-decoration: underline;
         }
         .ProseMirror ul,
         .ProseMirror ol {
