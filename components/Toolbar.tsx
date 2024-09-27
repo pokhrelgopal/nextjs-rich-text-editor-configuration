@@ -1,7 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { type Editor } from "@tiptap/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 import {
   Bold,
   Strikethrough,
@@ -54,12 +62,33 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Input } from "./ui/input";
 
 type Props = {
   editor: Editor | null;
 };
 
 export default function Toolbar({ editor }: Props) {
+  const [showLinkDialog, setShowLinkDialog] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
+  useEffect(() => {
+    if (!editor) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === "k") {
+        event.preventDefault();
+        if (editor.state.selection.empty) return;
+        setShowLinkDialog(true);
+      }
+    };
+
+    editor.view.dom.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      editor.view.dom.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [editor]);
+
   if (!editor) return null;
 
   const addImage = () => {
@@ -76,11 +105,16 @@ export default function Toolbar({ editor }: Props) {
     }
   };
 
-  const addLink = () => {
-    const url = window.prompt("Enter the URL:");
+  const addLink = (url: string) => {
     if (url) {
-      editor.chain().focus().setLink({ href: url }).run();
+      const formattedUrl =
+        url.startsWith("http://") || url.startsWith("https://")
+          ? url
+          : `https://${url}`;
+      editor.chain().focus().setLink({ href: formattedUrl }).run();
     }
+    setShowLinkDialog(false);
+    setLinkUrl("");
   };
 
   const addTable = () => {
@@ -191,7 +225,9 @@ export default function Toolbar({ editor }: Props) {
               <Toggle
                 size="sm"
                 pressed={editor.isActive("bold")}
-                onPressedChange={() => editor.chain().focus().toggleBold().run()}
+                onPressedChange={() =>
+                  editor.chain().focus().toggleBold().run()
+                }
               >
                 <Bold className="h-4 w-4" />
               </Toggle>
@@ -203,7 +239,9 @@ export default function Toolbar({ editor }: Props) {
               <Toggle
                 size="sm"
                 pressed={editor.isActive("italic")}
-                onPressedChange={() => editor.chain().focus().toggleItalic().run()}
+                onPressedChange={() =>
+                  editor.chain().focus().toggleItalic().run()
+                }
               >
                 <Italic className="h-4 w-4" />
               </Toggle>
@@ -215,7 +253,9 @@ export default function Toolbar({ editor }: Props) {
               <Toggle
                 size="sm"
                 pressed={editor.isActive("underline")}
-                onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
+                onPressedChange={() =>
+                  editor.chain().focus().toggleUnderline().run()
+                }
               >
                 <Underline className="h-4 w-4" />
               </Toggle>
@@ -227,7 +267,9 @@ export default function Toolbar({ editor }: Props) {
               <Toggle
                 size="sm"
                 pressed={editor.isActive("strike")}
-                onPressedChange={() => editor.chain().focus().toggleStrike().run()}
+                onPressedChange={() =>
+                  editor.chain().focus().toggleStrike().run()
+                }
               >
                 <Strikethrough className="h-4 w-4" />
               </Toggle>
@@ -239,7 +281,9 @@ export default function Toolbar({ editor }: Props) {
               <Toggle
                 size="sm"
                 pressed={editor.isActive("code")}
-                onPressedChange={() => editor.chain().focus().toggleCode().run()}
+                onPressedChange={() =>
+                  editor.chain().focus().toggleCode().run()
+                }
               >
                 <Code className="h-4 w-4" />
               </Toggle>
@@ -251,7 +295,9 @@ export default function Toolbar({ editor }: Props) {
               <Toggle
                 size="sm"
                 pressed={editor.isActive("highlight")}
-                onPressedChange={() => editor.chain().focus().toggleHighlight().run()}
+                onPressedChange={() =>
+                  editor.chain().focus().toggleHighlight().run()
+                }
               >
                 <Highlighter className="h-4 w-4" />
               </Toggle>
@@ -292,7 +338,9 @@ export default function Toolbar({ editor }: Props) {
               <Toggle
                 size="sm"
                 pressed={editor.isActive("taskList")}
-                onPressedChange={() => editor.chain().focus().toggleTaskList().run()}
+                onPressedChange={() =>
+                  editor.chain().focus().toggleTaskList().run()
+                }
               >
                 <CheckSquare className="h-4 w-4" />
               </Toggle>
@@ -391,11 +439,15 @@ export default function Toolbar({ editor }: Props) {
           <div className="border-r border-gray-300"></div>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button size="sm" variant="ghost" onClick={addLink}>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowLinkDialog(true)}
+              >
                 <Link className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Add Link</TooltipContent>
+            <TooltipContent>Add Link (Ctrl+K)</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -438,7 +490,9 @@ export default function Toolbar({ editor }: Props) {
                   <span>Insert Table</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onSelect={() => editor.chain().focus().addColumnBefore().run()}
+                  onSelect={() =>
+                    editor.chain().focus().addColumnBefore().run()
+                  }
                 >
                   <ColumnsIcon className="mr-2 h-4 w-4" />
                   <span>Add Column Before</span>
@@ -502,13 +556,17 @@ export default function Toolbar({ editor }: Props) {
             <DropdownMenuContent>
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  onSelect={() => editor.chain().focus().toggleSubscript().run()}
+                  onSelect={() =>
+                    editor.chain().focus().toggleSubscript().run()
+                  }
                 >
                   <Subscript className="mr-2 h-4 w-4" />
                   <span>Subscript</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onSelect={() => editor.chain().focus().toggleSuperscript().run()}
+                  onSelect={() =>
+                    editor.chain().focus().toggleSuperscript().run()
+                  }
                 >
                   <Superscript className="mr-2 h-4 w-4" />
                   <span>Superscript</span>
@@ -518,6 +576,22 @@ export default function Toolbar({ editor }: Props) {
           </DropdownMenu>
         </div>
       </div>
+      <Dialog open={showLinkDialog} onOpenChange={setShowLinkDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Link</DialogTitle>
+          </DialogHeader>
+          <Input
+            type="url"
+            placeholder="Enter URL"
+            value={linkUrl}
+            onChange={(e) => setLinkUrl(e.target.value)}
+          />
+          <DialogFooter>
+            <Button onClick={() => addLink(linkUrl)}>Add Link</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </TooltipProvider>
   );
 }
